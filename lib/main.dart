@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:get/get.dart';
-import 'package:pokedex/constants.dart';
-
 import 'package:pokedex/controller/pokeController.dart';
 import 'package:pokedex/model/poke_model.dart';
-
 import 'components/backround_clipper.dart';
-// import 'package:flutter_swiper/flutter_swiper.dart';
 
 void main() {
   runApp(MyApp());
@@ -51,109 +48,127 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(),
-        body: Column(children: [
-          Text(
-            'PokeDex',
-            style: TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-                fontSize: 45,
-                letterSpacing: 6),
-          ),
-          Text(
-            'Poke Universe',
-            style:
-                TextStyle(color: Colors.black, fontSize: 18, letterSpacing: 8),
-          ),
-          SizedBox(
-            height: 70,
-          ),
-          Expanded(
-              child: FutureBuilder<PokeModel>(
-                  future: _pokeDataModel,
-                  builder: (context, snapshot) {
-                    return Stack(children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: kDefaultPadding * 2),
-                        child: ClipPath(
-                          clipper: CardClipper(),
-                          child: Container(
-                            width: MediaQuery.of(context).size.width * 0.8,
-                            height:
-                                MediaQuery.of(context).size.width * 0.8 * 1.55,
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                colors: [
-                                  Colors.orange,
-                                  Colors.deepOrangeAccent
-                                ],
-                                begin: Alignment.topRight,
-                                end: Alignment.bottomLeft,
-                              ),
-                            ),
-                            child: Swiper(
-                              outer: true,
-                              containerHeight: 100,
-                              autoplay: true,
-                              itemCount: snapshot.data!.pokemon.length,
-                              itemBuilder: (context, index) {
-                                var pokeList = snapshot.data!.pokemon[index];
-                                return Column(
-                                  
+    return SafeArea(
+      child: Scaffold(
+         
+          body: SingleChildScrollView(
+            child: Column(
+              children: [
+                SizedBox(height: 30,),
+                Text(
+                  'PokeDex',
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 53,
+                      letterSpacing: 10),
+                ),
+                Text(
+                  'Poke Universe',
+                  style: TextStyle(
+                      color: Colors.black, fontSize: 18, letterSpacing: 12),
+                ),
+                SizedBox(
+                  height: 40,
+                ),
+                FutureBuilder<PokeModel>(
+                    future: _pokeDataModel,
+                    builder: (context, snapshot) {
+                      return Container(
+                        height: 520,
+                        width: MediaQuery.of(context).size.width,
+                        child: Swiper(
+                          autoplay: true,
+                          itemCount: snapshot.data!.pokemon.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            var pokeList = snapshot.data!.pokemon[index];
+                            return ClipPath(
+                              clipper: CardClipper(),
+                              child: Container(
+                                width: MediaQuery.of(context).size.width * 0.8,
+                                height: MediaQuery.of(context).size.width *
+                                    0.8 *
+                                    1.55,
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      Colors.orange,
+                                      Colors.deepOrangeAccent,
+                                    ],
+                                    begin: Alignment.topRight,
+                                    end: Alignment.bottomLeft,
+                                  ),
+                                ),
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
                                   children: [
-                                    SizedBox(
-                                      height: 130,
+                                    Spacer(
+                                      flex: 2,
                                     ),
                                     Image(
                                       image: NetworkImage(pokeList.img),
-                                      height: 200,
-                                    
+                                      fit: BoxFit.fill,
                                     ),
                                     SizedBox(
-                                      height: 10,
+                                      height: 100,
                                     ),
-                                    Text(
-                                      pokeList.name,
-                                      style: TextStyle(
-                                        fontSize: 40,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
+                                    Container(
+                                      height: 80,
+                                      width: MediaQuery.of(context).size.width,
+                                      decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.only(
+                                              bottomLeft: Radius.circular(10),
+                                              bottomRight: Radius.circular(10)),
+                                          color: Colors.white),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(pokeList.name,
+                                                style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 20)),
+                                            SizedBox(
+                                              height: 5,
+                                            ),
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                Text(
+                                                    "Height "
+                                                    '${pokeList.height}',
+                                                    style: TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 13)),
+                                                Text(
+                                                    "Weight "
+                                                    '${pokeList.weight}',
+                                                    style: TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 13)),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ),
-                                    SizedBox(
-                                      height: 15,
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        Text(
-                                          "Height: " '${pokeList.height}',
-                                          style: TextStyle(
-                                              fontSize: 15,
-                                              color: Colors.white),
-                                        ),
-                                        Text(
-                                          "Weight: " '${pokeList.weight}',
-                                          style: TextStyle(
-                                              fontSize: 15,
-                                              color: Colors.white),
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(height: 50,),
                                   ],
-                                );
-                              },
-                            ),
-                          ),
+                                ),
+                              ),
+                            );
+                          },
+                          viewportFraction: 0.8,
+                          scale: 0.9,
                         ),
-                      ),
-                    ]);
-                  }))
-        ]));
+                      );
+                    }),
+              ],
+            ),
+          )),
+    );
   }
 }
